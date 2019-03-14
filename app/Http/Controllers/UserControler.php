@@ -86,10 +86,17 @@ class UserControler extends Controller
         //die();
         $pwd = hash('SHA256', $password);  // Cifrar pass
 
-        if(!is_null($email) && !is_null($password)){
+        if(!is_null($email) && !is_null($password) && ($getToken == null || $getToken == 'false')){
             $signup = $jwtAuth->signup($email, $pwd);
-            return response()->json($signup, 200);
+        }elseif ($getToken != null) {
+            $signup = $jwtAuth->signup($email, $pwd, $getToken);
+        }else {
+            $signup = array(
+                'status' => 'error',
+                'message' => 'Enviar datos por POST'
+            );
         }
+        return response()->json($signup, 200);
 
     }
 }

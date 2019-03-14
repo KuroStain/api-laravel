@@ -56,19 +56,23 @@ class JwTAuth{
         }
     }
 
+    // Lo que hace este metodo es recibir un token. Decodificarlo y verificar que sea un objeto
+    // Entregando los datos decodificados en caso de ser necesario
     public function checkToken($jwt, $getIdentity = false)
     {
         $auth = false;
 
         try{
             $decoded = JWT::decode($jwt, $this->key, array('HS256'));
-        }catch(UnexpectedValueException $e){
+        } catch(\UnexpectedValueException $e){
             $auth = false;
-        }catch(DomainException $e){
+        } catch(\DomainException $e){
+            $auth = false;
+        } catch (\SignatureInvalidException $e) {
             $auth = false;
         }
 
-        if(is_object($decoded) && isset($decoded->sub)){
+        if(isset($decoded) && is_object($decoded) && isset($decoded->sub)){
             $auth = true;
         }else{
             $auth = false;
