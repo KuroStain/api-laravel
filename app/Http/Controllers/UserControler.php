@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\User;
+use App\Helpers\JwtAuth;
 
 class UserControler extends Controller
 {
@@ -16,23 +17,29 @@ class UserControler extends Controller
         $params = json_decode($json);
 
         $role = 'USER_ROLE';
-        // Si el $json no es null y existe el parametro indicado, entonces asociara el dato si no, dejara null
+        // Si el $json no es null y existe el parametro indicado, entonces asociara el 
+        // dato si no, dejara null
         $name       = (!is_null($json) && isset($params->name)) ? $params->name : null;
         $surname    = (!is_null($json) && isset($params->surname)) ? $params->surname : null;
         $email      = (!is_null($json) && isset($params->email)) ? $params->email : null;      
         $password   = (!is_null($json) && isset($params->password)) ? $params->password : null;
 
+        // Verificar que los campos existan
         if (!is_null($name) && !is_null($email) && !is_null($password)) {
               
+            // Se crea el objeto usuario y se asignan sus valores correspondientes
             $user = new User();
                 $user->name = $name;
                 $user->surname = $surname;
                 $user->email = $email;
                 
+                // Se codifica la contraseña con un cifrado para seguridad
                 $psw = hash('sha256', $password);
                 $user->password = $psw;
 
-                // Comprovar usuario duplicado
+                // Comprovar usuario duplicado, consultando si el correo ingresado ya existe
+                // si encuentra al menos uno, lo contara. De esta forma solo guardara cuando
+                // no existe el correo en la bd
                 $isset_user = User::where('email', '=', $email)->count();
                 if ($isset_user == 0) {
                     // Guardar usuario
@@ -40,22 +47,23 @@ class UserControler extends Controller
                     $data = array(
                         'status'    => 'succes',
                         'code'      => 200,
-                        'mesage'    => 'Usuario registrado correctamente'
+                        'message'   => 'Usuario registrado correctamente'
                     );
                 }else {
                     // Duplicado
                     $data = array(
                         'status'    => 'error',
                         'code'      => 400,
-                        'mesage'    => 'Email ya registrado'
+                        'message'   => 'Email ya registrado'
                     );
                 }
 
+        // Error en caso de no crear el usuario
         }else {
             $data = array(
                 'status'    => 'error',
                 'code'      => 400,
-                'mesage'    => 'Usuario no creado'
+                'message'   => 'Usuario no creado'
             );
         }
 
@@ -64,7 +72,24 @@ class UserControler extends Controller
 
     public function login(Request $request)
     {
-        echo "Accion Login";
-        die();
+        $jwtAuth = new JwtAuth();
+
+        // Recibir via POST
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+
+        $email      = (!is_null($json) && isset($params->email)) ? $params->email : null;
+        $password   = (!is_null($json) && isset($params->password)) ? $params->password : null;
+        $getToken   = (!is_null($json) && isset($params->gettoken)) ? $params->gettoken : null;
+        
+        //var_dump($jwtAuth);
+        //die();
+        $pwd = hash('SHA256', $password);  // Cifrar pass
+
+        if(!is_null($email) && !is_null($password)){
+            $signup = $jwtAuth->signup($email, $pwd);
+            return response()->json($signup, 200);
+        }
+
     }
 }
