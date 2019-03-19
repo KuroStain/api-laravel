@@ -19,4 +19,4 @@ Route::post('/api/register', 'UserControler@register');
 
 Route::post('/api/login', 'UserControler@login');
 
-Route::resource('api/cars', 'CarControler');
+Route::resource('api/car', 'CarControler');

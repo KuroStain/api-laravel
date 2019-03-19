@@ -29,34 +29,34 @@ class UserControler extends Controller
               
             // Se crea el objeto usuario y se asignan sus valores correspondientes
             $user = new User();
-                $user->name = $name;
-                $user->surname = $surname;
-                $user->email = $email;
-                
-                // Se codifica la contraseña con un cifrado para seguridad
-                $psw = hash('sha256', $password);
-                $user->password = $psw;
+            $user->name = $name;
+            $user->surname = $surname;
+            $user->email = $email;
+            
+            // Se codifica la contraseña con un cifrado para seguridad
+            $psw = hash('sha256', $password);
+            $user->password = $psw;
 
-                // Comprovar usuario duplicado, consultando si el correo ingresado ya existe
-                // si encuentra al menos uno, lo contara. De esta forma solo guardara cuando
-                // no existe el correo en la bd
-                $isset_user = User::where('email', '=', $email)->count();
-                if ($isset_user == 0) {
-                    // Guardar usuario
-                    $user->save();
-                    $data = array(
-                        'status'    => 'succes',
-                        'code'      => 200,
-                        'message'   => 'Usuario registrado correctamente'
-                    );
-                }else {
-                    // Duplicado
-                    $data = array(
-                        'status'    => 'error',
-                        'code'      => 400,
-                        'message'   => 'Email ya registrado'
-                    );
-                }
+            // Comprovar usuario duplicado, consultando si el correo ingresado ya existe
+            // si encuentra al menos uno, lo contara. De esta forma solo guardara cuando
+            // no existe el correo en la bd
+            $isset_user = User::where('email', '=', $email)->count();
+            if ($isset_user == 0) {
+                // Guardar usuario
+                $user->save();
+                $data = array(
+                    'status'    => 'succes',
+                    'code'      => 200,
+                    'message'   => 'Usuario registrado correctamente'
+                );
+            }else {
+                // Duplicado
+                $data = array(
+                    'status'    => 'error',
+                    'code'      => 400,
+                    'message'   => 'Email ya registrado'
+                );
+            }
 
         // Error en caso de no crear el usuario
         }else {

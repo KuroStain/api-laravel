@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Car extends Model
 {
     // Se espesifica que tabla es la que se usara.
-    protected $table = cars;
+    protected $table = 'cars';
 
     // Relacion uno a muchos
     // De esta forma el objeto "user" tendra relacionado todos los atributos de la tabla cars
