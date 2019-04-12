@@ -14,9 +14,9 @@ class CarControler extends Controller
     {
         $car = Car::all()->load('user');
         return response()->json(array(
-            'cars' => $car,
-            'status' => 'succes',
-            'code' => 200,
+            'cars'      => $car,
+            'status'    => 'success',
+            'code'      => 200,
         ));
     }
 
@@ -24,9 +24,9 @@ class CarControler extends Controller
     {
         $car = Car::find($id)->load('user');
         return response()->json(array(
-            'card' => $car,
-            'status' => 'succes',
-            'code' => 200,
+            'card'      => $car,
+            'status'    => 'success',
+            'code'      => 200,
         ));
     }
 
@@ -34,14 +34,14 @@ class CarControler extends Controller
     {
         $hash = $request->header('Authorization', null);
 
-        $jwtAuth = new JwtAuth();
+        $jwtAuth    = new JwtAuth();
         $checkToken = $jwtAuth->checkToken($hash);
 
         if($checkToken){
             // Recoger datos por POST
-            $json = $request->input('json', null);
-            $params = json_decode($json);
-            $params_array = json_decode($json, true);
+            $json           = $request->input('json', null);
+            $params         = json_decode($json);
+            $params_array   = json_decode($json, true);
 
             // Conseguir el user identificado
             $user = $jwtAuth->checkToken($hash, true);
@@ -71,7 +71,8 @@ class CarControler extends Controller
 
             $data = array(
                     'car'   => $car,
-                    'status'=> 'succes',
+                    'message' => 'Registro OK',
+                    'status'=> 'success',
                     'code'  => 200,
             );
             
@@ -91,14 +92,14 @@ class CarControler extends Controller
     {
         $hash = $request->header('Authorization', null);
 
-        $jwtAuth = new JwtAuth();
+        $jwtAuth    = new JwtAuth();
         $checkToken = $jwtAuth->checkToken($hash);
 
         if($checkToken){
 
-            $json = $request->input('json', null);
-            $params = json_decode($json);
-            $params_array = json_decode($json, true);
+            $json           = $request->input('json', null);
+            $params         = json_decode($json);
+            $params_array   = json_decode($json, true);
 
             $validate = Validator::make($params_array,[
                 'title'			=> 'required|string|max:255|min:1',
@@ -114,7 +115,7 @@ class CarControler extends Controller
 
             $data = array(
                 'car'   => $params,
-                'status'=> 'succes',
+                'status'=> 'success',
                 'code'  => 200,
         );
 
@@ -134,7 +135,7 @@ class CarControler extends Controller
     {
         $hash = $request->header('Authorization', null);
 
-        $jwtAuth = new JwtAuth();
+        $jwtAuth    = new JwtAuth();
         $checkToken = $jwtAuth->checkToken($hash);
 
         if($checkToken){
@@ -142,9 +143,9 @@ class CarControler extends Controller
             $car = Car::Find($id);
             $car->delete();
             return response()->json(array(
-                'card' => $car,
-                'status' => 'succes',
-                'code' => 200,
+                'card'      => $car,
+                'status'    => 'success',
+                'code'      => 200,
             ));
 
             

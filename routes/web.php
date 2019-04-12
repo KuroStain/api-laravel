@@ -16,7 +16,6 @@ Route::get('/', function () {
 });
 
 Route::post('/api/register', 'UserControler@register');
-
 Route::post('/api/login', 'UserControler@login');
-
 Route::resource('api/car', 'CarControler');
+

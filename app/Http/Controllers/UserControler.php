@@ -28,10 +28,10 @@ class UserControler extends Controller
         if (!is_null($name) && !is_null($email) && !is_null($password)) {
               
             // Se crea el objeto usuario y se asignan sus valores correspondientes
-            $user = new User();
-            $user->name = $name;
-            $user->surname = $surname;
-            $user->email = $email;
+            $user           = new User();
+            $user->name     = $name;
+            $user->surname  = $surname;
+            $user->email    = $email;
             
             // Se codifica la contraseña con un cifrado para seguridad
             $psw = hash('sha256', $password);
@@ -45,7 +45,7 @@ class UserControler extends Controller
                 // Guardar usuario
                 $user->save();
                 $data = array(
-                    'status'    => 'succes',
+                    'status'    => 'success',
                     'code'      => 200,
                     'message'   => 'Usuario registrado correctamente'
                 );
@@ -92,8 +92,8 @@ class UserControler extends Controller
             $signup = $jwtAuth->signup($email, $pwd, $getToken);
         }else {
             $signup = array(
-                'status' => 'error',
-                'message' => 'Enviar datos por POST'
+                'status'    => 'error',
+                'message'   => 'Enviar datos por POST'
             );
         }
         return response()->json($signup, 200);
